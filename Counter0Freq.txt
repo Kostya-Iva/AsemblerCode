@@ -1,0 +1,23 @@
+//TCCR0 - 0b00001101 preskaler = 1024, tryb CTC, tryb "toggle"
+ldi R16, 0b0001_1101
+out TCCR0, R16
+
+//OCR0 200 dla 1 przycisku, 100 dla 2
+//PortA: przyciski, wej
+//PortB: wyj.
+ldi R16, 0
+out DDRA, R16
+ldi R16, 255
+out PORTA, R16 // pull-up
+out PORTB, R16 //wyj.
+
+main:
+
+SBIC PINA, 0
+ldi R16, 100
+SBIC PINA, 1
+ldi R16, 200
+
+out OCR0, R16
+
+rjmp main

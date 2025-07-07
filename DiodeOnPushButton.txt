@@ -1,0 +1,36 @@
+.org 0x00
+rjmp reset
+
+.org 0x02
+rjmp przerw0
+
+reset:
+
+ldi R16, low(RAMEND)
+out SPL, R16
+ldi R16, high(RAMEND)
+out SPH, R16
+
+ldi R16, 0b0000_0000
+out DDRD, R16
+
+ldi R16, 0b1111_1111
+out PORTD, R16
+out DDRB, R16
+
+ldi R16, 0b0010_0000
+out GICR, R16 // int0 -> on
+ldi R16, 0b0000_0010
+out MCUCR, R16
+sei
+
+ldi R17,1
+ldi R18,0
+
+start:
+out PORTB, r18
+rjmp start
+
+przerw0:
+out PORTB, r17
+reti

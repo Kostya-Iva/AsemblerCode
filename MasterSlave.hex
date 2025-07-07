@@ -1,0 +1,147 @@
+ldi r16, 255
+out ddrb, r16 //B wyj.
+
+sbi portb, 4
+
+ldi r16, 0b0101_0000 // praca w tryb. master
+out spcr, r16
+
+//transmisja
+ldi r17, 0x0C // display Shutdown
+ldi r18, 0x0B // Scan limit
+ldi r19, 0x0A // Intensity
+ldi r23, 0x09 // Decode
+ldi r25, 0x0F // dispTest
+
+ldi r20, 1
+ldi r21, 7
+ldi r22, 10
+ldi r24, 0xFF
+ldi r26, 0
+rcall przesyl
+
+main:
+nop
+rjmp main
+
+przesyl:
+cbi portb, 4
+
+out spdr, r17 //pierwszy przesyl bajta "Shutdown"
+rcall czekaj
+out spdr, r20
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r18 //drugi przesyl bajta "Scan limit"
+rcall czekaj
+out spdr, r21 //4 wyświetlaczy
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r19
+rcall czekaj
+out spdr, r22 //Intensity -> 10
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r23
+rcall czekaj
+out spdr, r24 //Decode mode
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+
+//wybór wyświetlacza
+ldi r16, 0x08
+ldi r17, 0x07
+ldi r18, 0x06
+ldi r19, 0x05
+ldi r20, 0x04
+ldi r21, 0x03
+ldi r22, 0x02
+ldi r23, 0x01
+
+ldi r24, 1
+ldi r25, 2
+ldi r26, 3
+ldi r27, 4
+ldi r28, 5
+ldi r29, 6
+ldi r30, 7
+ldi r31, 8
+//--------------------
+out spdr, r16
+rcall czekaj
+out spdr, r24
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r17
+rcall czekaj
+out spdr, r25
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r18
+rcall czekaj
+out spdr, r26
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r19
+rcall czekaj
+out spdr, r27
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r20
+rcall czekaj
+out spdr, r28
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r21
+rcall czekaj
+out spdr, r29
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r22
+rcall czekaj
+out spdr, r30
+rcall czekaj
+
+sbi portb, 4
+cbi portb, 4
+
+out spdr, r23
+rcall czekaj
+out spdr, r31
+rcall czekaj
+ret
+
+czekaj:
+sbis spsr, spif
+rjmp czekaj
+ret

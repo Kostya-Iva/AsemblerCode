@@ -1,0 +1,39 @@
+//7 diod podłączonych do układu, zliczanie impulsów odbywa się poprzez klikanie przycisku,po przepełnieniu zliczania impulsów zbocza opadającego zaświeca nową diodę
+
+.org $000 rjmp reset
+.org $009 rjmp przepelnienie
+
+reset:
+ldi r16, high(ramend)
+out sph, r16
+ldi r16, low(ramend)
+out spl, r16
+
+ser r17
+clr r18
+out DDRA, r17
+out DDRB, r18
+out DDRC, r17
+
+sbi PORTB, 0
+
+ldi r16, 0b0000_0001
+out timsk, r16
+sei
+
+main:
+in r16, tcnt0
+out porta, r16
+rjmp main
+
+przepelnienie:
+sbi portc, 7
+rcall czekaj
+cbi portc, 7
+rcall czekaj
+reti
+
+czekaj:
+//pętla opozniajaca
+ret
+

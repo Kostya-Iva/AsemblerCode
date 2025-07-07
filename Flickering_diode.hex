@@ -1,0 +1,32 @@
+LDI R16, low(ramend)
+OUT SPl, R16
+LDI R16, high(ramend)
+OUT SPH, R16
+
+LDI R16, 0b1111_1111
+OUT DDRA, R16
+
+start:
+LDI R17, 0b1010_1010
+OUT PORTA, R17
+rcall delayTrue
+LDI R18, 0b0101_0101
+OUT PORTA, R18
+rcall delayTrue
+
+    rjmp start
+
+delayTrue:
+LDI R20, 0
+
+delayAnother:
+LDI R19, 0
+
+delay:
+inc R19
+brne delay
+
+inc R20
+brne delayAnother
+
+ret

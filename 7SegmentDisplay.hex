@@ -1,0 +1,57 @@
+LDI R16, low(ramend)
+OUT SPl, R16
+LDI R16, high(ramend)
+OUT SPH, R16
+
+LDI R16, 0b1111_1111
+OUT DDRC, R16
+LDI R17, 0b0000_0000
+OUT DDRA, R17
+OUT PORTA, R16
+
+DWA:
+
+LDI R16, 0b1000_1100
+OUT PORTC, R16
+RCALL delayTrue
+sbic PINA, 0
+rjmp DWA
+
+SIEDEM:
+LDI R16, 0b1111_0100
+OUT PORTC, R16
+RCALL delayTrue
+sbic PINA, 0
+rjmp SIEDEM
+
+SIEDEM_KOLEJNE:
+LDI R16, 0b1111_0100
+OUT PORTC, R16
+RCALL delayTrue
+sbic PINA, 0
+rjmp SIEDEM_KOLEJNE
+
+PIEC:
+LDI R16, 0b1010_0001
+OUT PORTC, R16
+RCALL delayTrue
+sbic PINA, 0
+rjmp PIEC
+
+rjmp DWA
+
+
+delayTrue:
+LDI R20, 0
+
+delayAnother:
+LDI R19, 0
+
+delay:
+inc R19
+brne delay
+
+inc R20
+brne delayAnother
+
+ret
